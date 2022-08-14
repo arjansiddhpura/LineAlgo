@@ -305,4 +305,85 @@ qbMatrix2<T> operator*(const qbMatrix2<T> &lhs, const T &rhs)
     return result;
 }
 
+// matrix * matrix
+template <class T>
+qbMatrix2<T> operator*(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
+{
+    int l_numRows = lhs.m_nRows;
+    int l_numCols = lhs.m_nCols;
+    int r_numRows = rhs.m_nRows;
+    int r_numCols = rhs.m_nCols;
+
+    // standard matrix multiplication condition
+    if (l_numCols == r_numRows)
+    {
+        T *tempResult = new T[lhs.m_nRows * rhs.m_nCols];
+
+        // loop through each row of lhs
+        for (int lhsRow = 0; lhsRow < l_numRows; lhsRow++)
+        {
+            // loop through each column of rhs
+            for (int rhsCol = 0; rhsCol < r_numCols; rhsCol++)
+            {
+                T elementResult = 0.0;
+
+                // loop through each element of this lhs row
+                for (int lhsCol = 0; lhsCol < l_numCols; lhsCol++)
+                {
+                    // compute the lhs linear index
+                    int lhsLinearIndex = (lhsRow * l_numCols) + lhsCol;
+                    // compute the rhs linear index
+                    int rhsLinearIndex = (lhsCol * r_numCols) + rhsCol;
+                    // perform the calculation on these elements
+                    elementResult += (lhs.m_matrixData[lhsLinearIndex] * rhs.m_matrixData[rhsLinearIndex]);
+                }
+
+                // store the result
+                int resultLinearIndex = (lhsRow * r_numCols) + rhsCol;
+                tempResult[resultLinearIndex] = elementResult;
+            }
+        }
+
+        qbMatrix2<T> result(l_numRows, r_numCols, tempResult);
+        delete[] tempResult;
+        return result;
+    }
+    else
+    {
+        qbMatrix2<T> result(1, 1);
+        return result;
+    }
+}
+
+/* the == operator ******************************************************************************** */
+
+template <class T>
+bool qbMatrix2<T>::operator==(const qbMatrix2<T> &rhs)
+{
+    // check if matrices are the same size, if not return false
+    if ((this->m_nRows != rhs.m_nRows) || (this->m_nCols != rhs.m_nCols))
+        return false;
+
+    // check if the elements are equal
+    bool flag = true;
+    for (int i = 0; i < this->m_nElements; i++)
+    {
+        if (this->m_matrixData[i] != rhs.m_matrixData[i])
+            flag = false;
+    }
+    return flag;
+}
+
+/* ************************************************************************************************ */
+// private functions
+
+template <class T>
+int qbMatrix2<T>::Sub2Ind(int row, int col)
+{
+    if ((row < m_nRows) && (row >= 0) && (col < m_nCols) && (col >= 0))
+        return (row * m_nCols) + col;
+    else
+        return -1;
+}
+
 #endif
