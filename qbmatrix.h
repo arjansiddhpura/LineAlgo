@@ -143,7 +143,7 @@ T qbMatrix2<T>::GetElement(int row, int col)
     if (linearIndex >= 0)
         return m_matrixData[linearIndex];
     else
-        return -1;
+        return 0;
 }
 
 template <class T>
@@ -181,7 +181,7 @@ qbMatrix2<T> operator+(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
 {
     int numRows = lhs.m_nRows;
     int numCols = lhs.m_nCols;
-    int numElements = (numRow * numCols);
+    int numElements = (numRows * numCols);
     T *tempResult = new T[numElements];
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs.m_matrixData[i] + rhs.m_matrixData[i];
@@ -230,7 +230,7 @@ qbMatrix2<T> operator-(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
 {
     int numRows = lhs.m_nRows;
     int numCols = lhs.m_nCols;
-    int numElements = (numRow * numCols);
+    int numElements = (numRows * numCols);
     T *tempResult = new T[numElements];
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs.m_matrixData[i] - rhs.m_matrixData[i];

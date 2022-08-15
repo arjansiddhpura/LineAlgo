@@ -36,3 +36,7 @@
 
 # VSCode
 .vscode/
+.*
+*
+!*.cpp
+!*.h
