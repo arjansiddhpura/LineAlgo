@@ -1,18 +1,18 @@
-#ifndef QBMATRIX2_H
-#define QBMATRIX2_H
+#ifndef MATRIX2_H
+#define MATRIX2_H
 
 template <class T>
-class qbMatrix2
+class matrix2
 {
 public:
     // the various constructors
-    qbMatrix2();
-    qbMatrix2(int nRows, int nCols);
-    qbMatrix2(int nRows, int nCols, const T *inputData);
-    qbMatrix2(const qbMatrix2<T> &inputMatrix);
+    matrix2();
+    matrix2(int nRows, int nCols);
+    matrix2(int nRows, int nCols, const T *inputData);
+    matrix2(const matrix2<T> &inputMatrix);
 
     // destructor
-    ~qbMatrix2();
+    ~matrix2();
 
     // configuration methods
     bool resize(int numRows, int numCols);
@@ -24,29 +24,29 @@ public:
     int GetNumCols();
 
     // overload the == operator
-    bool operator==(const qbMatrix2<T> &rhs);
+    bool operator==(const matrix2<T> &rhs);
 
     // overload +, -, and * operators (friends)
     template <class U>
-    friend qbMatrix2<U> operator+(const qbMatrix2<U> &lhs, const qbMatrix2<U> &rhs);
+    friend matrix2<U> operator+(const matrix2<U> &lhs, const matrix2<U> &rhs);
     template <class U>
-    friend qbMatrix2<U> operator+(const U &lhs, const qbMatrix2<U> &rhs);
+    friend matrix2<U> operator+(const U &lhs, const matrix2<U> &rhs);
     template <class U>
-    friend qbMatrix2<U> operator+(const qbMatrix2<U> &lhs, const U &rhs);
+    friend matrix2<U> operator+(const matrix2<U> &lhs, const U &rhs);
 
     template <class U>
-    friend qbMatrix2<U> operator-(const qbMatrix2<U> &lhs, const qbMatrix2<U> &rhs);
+    friend matrix2<U> operator-(const matrix2<U> &lhs, const matrix2<U> &rhs);
     template <class U>
-    friend qbMatrix2<U> operator-(const U &lhs, const qbMatrix2<U> &rhs);
+    friend matrix2<U> operator-(const U &lhs, const matrix2<U> &rhs);
     template <class U>
-    friend qbMatrix2<U> operator-(const qbMatrix2<U> &lhs, const U &rhs);
+    friend matrix2<U> operator-(const matrix2<U> &lhs, const U &rhs);
 
     template <class U>
-    friend qbMatrix2<U> operator*(const qbMatrix2<U> &lhs, const qbMatrix2<U> &rhs);
+    friend matrix2<U> operator*(const matrix2<U> &lhs, const matrix2<U> &rhs);
     template <class U>
-    friend qbMatrix2<U> operator*(const U &lhs, const qbMatrix2<U> &rhs);
+    friend matrix2<U> operator*(const U &lhs, const matrix2<U> &rhs);
     template <class U>
-    friend qbMatrix2<U> operator*(const qbMatrix2<U> &lhs, const U &rhs);
+    friend matrix2<U> operator*(const matrix2<U> &lhs, const U &rhs);
 
 private:
     int Sub2Ind(int row, int col);
@@ -59,7 +59,7 @@ private:
 
 // the default constructor
 template <class T>
-qbMatrix2<T>::qbMatrix2()
+matrix2<T>::matrix2()
 {
     m_nRows = 1;
     m_nCols = 1;
@@ -70,7 +70,7 @@ qbMatrix2<T>::qbMatrix2()
 
 // construct an empty matrix (all elements 0)
 template <class T>
-qbMatrix2<T>::qbMatrix2(int nRows, int nCols)
+matrix2<T>::matrix2(int nRows, int nCols)
 {
     m_nRows = nRows;
     m_nCols = nCols;
@@ -82,7 +82,7 @@ qbMatrix2<T>::qbMatrix2(int nRows, int nCols)
 
 // construct from const linear array
 template <class T>
-qbMatrix2<T>::qbMatrix2(int nRows, int nCols, const T *inputData)
+matrix2<T>::matrix2(int nRows, int nCols, const T *inputData)
 {
     m_nRows = nRows;
     m_nCols = nCols;
@@ -94,7 +94,7 @@ qbMatrix2<T>::qbMatrix2(int nRows, int nCols, const T *inputData)
 
 // the copy constructor
 template <class T>
-qbMatrix2<T>::qbMatrix2(const qbMatrix2<T> &inputMatrix)
+matrix2<T>::matrix2(const matrix2<T> &inputMatrix)
 {
     m_nRows = inputMatrix.m_nRows;
     m_nCols = inputMatrix.m_nCols;
@@ -106,7 +106,7 @@ qbMatrix2<T>::qbMatrix2(const qbMatrix2<T> &inputMatrix)
 
 // destructor
 template <class T>
-qbMatrix2<T>::~qbMatrix2()
+matrix2<T>::~matrix2()
 {
     if (m_matrixData != nullptr)
         delete[] m_matrixData;
@@ -116,7 +116,7 @@ qbMatrix2<T>::~qbMatrix2()
 // configuration functions
 
 template <class T>
-bool qbMatrix2<T>::resize(int numRows, int numCols)
+bool matrix2<T>::resize(int numRows, int numCols)
 {
     m_nRows = numRows;
     m_nCols = numCols;
@@ -137,7 +137,7 @@ bool qbMatrix2<T>::resize(int numRows, int numCols)
 // element functions
 
 template <class T>
-T qbMatrix2<T>::GetElement(int row, int col)
+T matrix2<T>::GetElement(int row, int col)
 {
     int linearIndex = Sub2Ind(row, col);
     if (linearIndex >= 0)
@@ -147,7 +147,7 @@ T qbMatrix2<T>::GetElement(int row, int col)
 }
 
 template <class T>
-bool qbMatrix2<T>::SetElement(int row, int col, T elementValue)
+bool matrix2<T>::SetElement(int row, int col, T elementValue)
 {
     int linearIndex = Sub2Ind(row, col);
     if (linearIndex >= 0)
@@ -160,13 +160,13 @@ bool qbMatrix2<T>::SetElement(int row, int col, T elementValue)
 }
 
 template <class T>
-int qbMatrix2<T>::GetNumRows()
+int matrix2<T>::GetNumRows()
 {
     return m_nRows;
 }
 
 template <class T>
-int qbMatrix2<T>::GetNumCols()
+int matrix2<T>::GetNumCols()
 {
     return m_nCols;
 }
@@ -177,7 +177,7 @@ int qbMatrix2<T>::GetNumCols()
 /* the + operator ********************************************************************************* */
 // matrix + matrix
 template <class T>
-qbMatrix2<T> operator+(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
+matrix2<T> operator+(const matrix2<T> &lhs, const matrix2<T> &rhs)
 {
     int numRows = lhs.m_nRows;
     int numCols = lhs.m_nCols;
@@ -186,14 +186,14 @@ qbMatrix2<T> operator+(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs.m_matrixData[i] + rhs.m_matrixData[i];
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
 
 // scalar + matrix
 template <class T>
-qbMatrix2<T> operator+(const T &lhs, const qbMatrix2<T> &rhs)
+matrix2<T> operator+(const T &lhs, const matrix2<T> &rhs)
 {
     int numRows = rhs.m_nRows;
     int numCols = rhs.m_nCols;
@@ -202,14 +202,14 @@ qbMatrix2<T> operator+(const T &lhs, const qbMatrix2<T> &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs + rhs.m_matrixData[i];
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
 
 // matrix + scalar
 template <class T>
-qbMatrix2<T> operator+(const qbMatrix2<T> &lhs, const T &rhs)
+matrix2<T> operator+(const matrix2<T> &lhs, const T &rhs)
 {
     int numRows = lhs.m_nRows;
     int numCols = lhs.m_nCols;
@@ -218,7 +218,7 @@ qbMatrix2<T> operator+(const qbMatrix2<T> &lhs, const T &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs.m_matrixData[i] + rhs;
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
@@ -226,7 +226,7 @@ qbMatrix2<T> operator+(const qbMatrix2<T> &lhs, const T &rhs)
 /* the - operator ********************************************************************************* */
 // matrix - matrix
 template <class T>
-qbMatrix2<T> operator-(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
+matrix2<T> operator-(const matrix2<T> &lhs, const matrix2<T> &rhs)
 {
     int numRows = lhs.m_nRows;
     int numCols = lhs.m_nCols;
@@ -235,14 +235,14 @@ qbMatrix2<T> operator-(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs.m_matrixData[i] - rhs.m_matrixData[i];
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
 
 // scalar - matrix
 template <class T>
-qbMatrix2<T> operator-(const T &lhs, const qbMatrix2<T> &rhs)
+matrix2<T> operator-(const T &lhs, const matrix2<T> &rhs)
 {
     int numRows = rhs.m_nRows;
     int numCols = rhs.m_nCols;
@@ -251,14 +251,14 @@ qbMatrix2<T> operator-(const T &lhs, const qbMatrix2<T> &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs - rhs.m_matrixData[i];
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
 
 // matrix - scalar
 template <class T>
-qbMatrix2<T> operator-(const qbMatrix2<T> &lhs, const T &rhs)
+matrix2<T> operator-(const matrix2<T> &lhs, const T &rhs)
 {
     int numRows = lhs.m_nRows;
     int numCols = lhs.m_nCols;
@@ -267,7 +267,7 @@ qbMatrix2<T> operator-(const qbMatrix2<T> &lhs, const T &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs.m_matrixData[i] - rhs;
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
@@ -275,7 +275,7 @@ qbMatrix2<T> operator-(const qbMatrix2<T> &lhs, const T &rhs)
 /* the * operator ********************************************************************************* */
 // scalar * matrix
 template <class T>
-qbMatrix2<T> operator*(const T &lhs, const qbMatrix2<T> &rhs)
+matrix2<T> operator*(const T &lhs, const matrix2<T> &rhs)
 {
     int numRows = rhs.m_nRows;
     int numCols = rhs.m_nCols;
@@ -284,14 +284,14 @@ qbMatrix2<T> operator*(const T &lhs, const qbMatrix2<T> &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs * rhs.m_matrixData[i];
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
 
 // matrix * scalar
 template <class T>
-qbMatrix2<T> operator*(const qbMatrix2<T> &lhs, const T &rhs)
+matrix2<T> operator*(const matrix2<T> &lhs, const T &rhs)
 {
     int numRows = lhs.m_nRows;
     int numCols = lhs.m_nCols;
@@ -300,14 +300,14 @@ qbMatrix2<T> operator*(const qbMatrix2<T> &lhs, const T &rhs)
     for (int i = 0; i < numElements; i++)
         tempResult[i] = lhs.m_matrixData[i] * rhs;
 
-    qbMatrix2<T> result(numRows, numCols, tempResult);
+    matrix2<T> result(numRows, numCols, tempResult);
     delete[] tempResult;
     return result;
 }
 
 // matrix * matrix
 template <class T>
-qbMatrix2<T> operator*(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
+matrix2<T> operator*(const matrix2<T> &lhs, const matrix2<T> &rhs)
 {
     int l_numRows = lhs.m_nRows;
     int l_numCols = lhs.m_nCols;
@@ -344,13 +344,13 @@ qbMatrix2<T> operator*(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
             }
         }
 
-        qbMatrix2<T> result(l_numRows, r_numCols, tempResult);
+        matrix2<T> result(l_numRows, r_numCols, tempResult);
         delete[] tempResult;
         return result;
     }
     else
     {
-        qbMatrix2<T> result(1, 1);
+        matrix2<T> result(1, 1);
         return result;
     }
 }
@@ -358,7 +358,7 @@ qbMatrix2<T> operator*(const qbMatrix2<T> &lhs, const qbMatrix2<T> &rhs)
 /* the == operator ******************************************************************************** */
 
 template <class T>
-bool qbMatrix2<T>::operator==(const qbMatrix2<T> &rhs)
+bool matrix2<T>::operator==(const matrix2<T> &rhs)
 {
     // check if matrices are the same size, if not return false
     if ((this->m_nRows != rhs.m_nRows) || (this->m_nCols != rhs.m_nCols))
@@ -378,7 +378,7 @@ bool qbMatrix2<T>::operator==(const qbMatrix2<T> &rhs)
 // private functions
 
 template <class T>
-int qbMatrix2<T>::Sub2Ind(int row, int col)
+int matrix2<T>::Sub2Ind(int row, int col)
 {
     if ((row < m_nRows) && (row >= 0) && (col < m_nCols) && (col >= 0))
         return (row * m_nCols) + col;
