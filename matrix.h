@@ -1,6 +1,12 @@
 #ifndef MATRIX2_H
 #define MATRIX2_H
 
+#include <stdexcept>
+#include <iostream>
+#include <iomanip>
+#include <math.h>
+#include <vector>
+
 template <class T>
 class matrix2
 {
@@ -10,6 +16,7 @@ public:
     matrix2(int nRows, int nCols);
     matrix2(int nRows, int nCols, const T *inputData);
     matrix2(const matrix2<T> &inputMatrix);
+    matrix2(int nRows, int nCols, const std::vector<T> *inputData);
 
     // destructor
     ~matrix2();
@@ -102,6 +109,18 @@ matrix2<T>::matrix2(const matrix2<T> &inputMatrix)
     m_matrixData = new T[m_nElements];
     for (int i = 0; i < m_nElements; i++)
         m_matrixData[i] = inputMatrix.m_matrixData[i];
+}
+
+// construct from std::vector
+template <class T>
+matrix2<T>::matrix2(int nRows, int nCols, const std::vector<T> *inputData)
+{
+    m_nRows = nRows;
+    m_nCols = nCols;
+    m_nElements = m_nRows * m_nCols;
+    m_matrixData = new T[m_nElements];
+    for (int i = 0; i < m_nElements; i++)
+        m_matrixData[i] = inputData->at(i);
 }
 
 // destructor
