@@ -63,15 +63,15 @@ public:
 
     bool Separate(matrix2<T> *matrix1, matrix2<T> *matrix2, int colNum);
 
-    // private:
-public:
+private:
+    // public:
+    bool Join(const matrix2<T> &matrix2);
     int Sub2Ind(int row, int col);
     bool IsSquare();
     bool CloseEnough(T f1, T f2);
     void SwapRow(int i, int j);
     void MultAdd(int i, int j, T multFactor);
     void MultRow(int i, T multFactor);
-    bool Join(const matrix2<T> &matrix2);
     int FindRowWithMaxElement(int colNumber, int startingRow);
     void PrintMatrix();
 
@@ -226,6 +226,32 @@ template <class T>
 int matrix2<T>::GetNumCols()
 {
     return m_nCols;
+}
+
+template <class T>
+bool matrix2<T>::Compare(const matrix2<T> &matrix1, double tolerance)
+{
+    // check that the matrices have the same dimensions
+    int numRows1 = matrix1.m_nRows;
+    int numCols1 = matrix1.m_nCols;
+    if ((numRows1 != m_nRows) || (numCols1 != m_nCols))
+        return false;
+
+    // loop over all the elements and compute the sum of differences
+    double cumulativeSum = 0.0;
+    for (int i = 0; i < m_nElements; i++)
+    {
+        T element1 = matrix1.m_matrixData[i];
+        T element2 = m_matrixData[i];
+        cumulativeSum += ((element1 - element2) * (element1 - element2));
+    }
+
+    // calculate the root mean square
+    double finalValue = sqrt(cumulativeSum / ((numRows1 * numCols1) - 1));
+    if (final < tolerance)
+        return true;
+    else
+        return false;
 }
 
 /* ************************************************************************************************ */
@@ -425,14 +451,95 @@ bool matrix2<T>::operator==(const matrix2<T> &rhs)
     bool flag = true;
     for (int i = 0; i < this->m_nElements; i++)
     {
-        if (this->m_matrixData[i] != rhs.m_matrixData[i])
+        // if (this->m_matrixData[i] != rhs.m_matrixData[i])
+        if (!CloseEnough(this->m_matrixData[i], rhs.m_matrixData[i]))
             flag = false;
     }
     return flag;
 }
 
+// separate the matrix into two parts, around the column number provided
+// note that the output is returned into the two matrix2<T> pointers in the input argument list
+template <class T>
+bool matrix2<T>::Separate(matrix2<T> *matrix1, matrix2<T> *matrix2, int colNum)
+{
+    // compute the sizes of the new matrices
+    int numRows = m_nRows;
+    int numCols1 = colNum;
+    int numCols2 = m_nCols - colNum;
+
+    // resize the two matrices to the proper dimensions
+    matrix1->Resize(numRows, numCols1);
+    matrix2->Resize(numRows, numCols2);
+
+    // loop over the original matrix and store data into
+    // the appropriate elements of the two output matrices
+    for (int row = 0; row < m_nRows; row++)
+    {
+        for (int col = 0; col < m_nCols; col++)
+        {
+            if (col < colNum)
+                matrix1->SetElement(row, col, this->GetElement(row, col));
+            else
+                matrix2->SetElement(row, col - colNum, this->GetElement(row, col));
+        }
+    }
+}
+
 /* ************************************************************************************************ */
 // private functions
+
+// join two matrices
+template <class T>
+bool matrix2<T>::Join(const matrix2<T> &matrix2)
+{
+    // extract the information that we need from both matrices
+    int numRows1 = m_nRows;
+    int numRows2 = matrix2.m_nRows;
+    int numCols1 = m_nCols;
+    int numCols2 = matrix2.m_nCols;
+
+    // throw error if the matrices have different number of rows
+    if (numRows1 != numRows2)
+        throw std::invalid_argument("Attempt to join matrices with different numbers of rows is invalid!");
+
+    // allocate memory for the result
+    // note that only the number of columns increases
+    T *newMatrixData = new T[numRows1 * (numCols1 + numCols2)];
+
+    // copy the two matrices into the new one
+    int linearIndex, resultLinearIndex;
+    for (int i = 0; i < numRows1; i++)
+    {
+        for (int j = 0; j < (numCols1 + numCols2); j++)
+        {
+            resultLinearIndex = (i * (numCols1 + numcol2)) + j;
+
+            // if j is in the left hand matrix, we get data from there
+            if (j < numCols1)
+            {
+                linearIndex = (i * numCols1) + j;
+                newMatrixData[resultLinearIndex] = m_matrixData[linearIndex];
+            }
+            // otherwise, j must be in the right hand matrix, so we get data from there
+            else
+            {
+                linearIndex = (i * numCols2) + (j - numCols1);
+                newMatrixData[resultLinearIndex] = matrix2.m_matrixData[linearIndex];
+            }
+        }
+    }
+
+    // update the stored data
+    m_nCols = numCols1 + numCols2;
+    m_nElements = m_nRows * m_nCols;
+    delete[] m_matrixData;
+    m_matrixData = new T[m_nElements];
+    for (int i = 0; i < m_nElements; i++)
+        m_matrixData[i] = newMatrixData[i];
+
+    return true;
+}
 
 template <class T>
 int matrix2<T>::Sub2Ind(int row, int col)
@@ -441,6 +548,13 @@ int matrix2<T>::Sub2Ind(int row, int col)
         return (row * m_nCols) + col;
     else
         return -1;
+}
+
+// test if values are close enough to a fixed tolerance
+template <class T>
+bool matrix2<T>::CloseEnough(T f1, T f2)
+{
+    return fabs(f1 - f2) < 1e-9;
 }
 
 #endif
