@@ -22,7 +22,8 @@ public:
     ~matrix2();
 
     // configuration methods
-    bool resize(int numRows, int numCols);
+    bool Resize(int numRows, int numCols);
+    void SetToIdentity();
 
     // element access methods
     T GetElement(int row, int col);
@@ -30,8 +31,13 @@ public:
     int GetNumRows();
     int GetNumCols();
 
+    // manipulation methods
+    // compute matrix inverse
+    bool Inverse();
+
     // overload the == operator
     bool operator==(const matrix2<T> &rhs);
+    bool Compare(const matrix2<T> &matrix1, double tolerance);
 
     // overload +, -, and * operators (friends)
     template <class U>
@@ -55,8 +61,21 @@ public:
     template <class U>
     friend matrix2<U> operator*(const matrix2<U> &lhs, const U &rhs);
 
-private:
+    bool Separate(matrix2<T> *matrix1, matrix2<T> *matrix2, int colNum);
+
+    // private:
+public:
     int Sub2Ind(int row, int col);
+    bool IsSquare();
+    bool CloseEnough(T f1, T f2);
+    void SwapRow(int i, int j);
+    void MultAdd(int i, int j, T multFactor);
+    void MultRow(int i, T multFactor);
+    bool Join(const matrix2<T> &matrix2);
+    int FindRowWithMaxElement(int colNumber, int startingRow);
+    void PrintMatrix();
+
+private:
     T *m_matrixData;
     int m_nRows, m_nCols, m_nElements;
 };
@@ -135,7 +154,7 @@ matrix2<T>::~matrix2()
 // configuration functions
 
 template <class T>
-bool matrix2<T>::resize(int numRows, int numCols)
+bool matrix2<T>::Resize(int numRows, int numCols)
 {
     m_nRows = numRows;
     m_nCols = numCols;
@@ -150,6 +169,25 @@ bool matrix2<T>::resize(int numRows, int numCols)
     }
     else
         return false;
+}
+
+// function to convert the existing matrix into an identity matrix
+template <class T>
+void matrix2<T>::SetToIdentity()
+{
+    if (!IsSquare())
+        throw std::invalid_argument("Cannot form an identity matrix that is not square!");
+
+    for (int row = 0; row < m_nRows; row++)
+    {
+        for (int col = 0; col < m_nCols; col++)
+        {
+            if (col == row)
+                m_matrixData[Sub2Ind(row, col)] = 1.0;
+            else
+                m_matrixData[Sub2Ind(row, col)] = 0.0;
+        }
+    }
 }
 
 /* ************************************************************************************************ */
