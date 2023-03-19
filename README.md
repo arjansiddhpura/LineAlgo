@@ -1,6 +1,8 @@
 # LineAlgo
 ## A Linear Algebra Library in C++
 
+Still under construction :)
+
 _To program is to understand_  
 _- Kristen Nygaard_
 
